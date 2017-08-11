@@ -10,36 +10,39 @@
         </div>
     </form>
 </div>
+<div class='row'>
+    <div class='panel'>
 
-<div class='panel panel-default'>
-    <ul class='list-group'>
         {% for user in users %}
-
-        <li class='list-group-item panel-header'>{{user.name}}
-            <form method='post' action='/users/{{user.id}}?_method=DELETE'>
-                <button class='btn btn-danger'>Delete</button>
-            </form>
-        </li>
-
-        <li class='list-group-item panel-content'>
-            <form method='post' action='/users/{{user.id}}/awards'>
-                <button class='btn btn-success'>Add Award</button>
-            </form>
-            {% if user.awards.length > 0 %} Awards -
+        <div class='col-sm-4'>
             <ul class='list-group'>
-                {% for award in user.awards %}
-                <li class='list-group-item'> {{award}}
-                    <form method='post' action='users/{{user.id}}/awards/{{loop.index0}}?_method=DELETE'>
-                        <button class='btn btn-warning'>Delete Award</button>
+                <li class='list-group-item panel-heading'>{{user.name}}
+                    <form method='post' action='/users/{{user.id}}?_method=DELETE'>
+                        <button class='btn btn-danger'>Delete</button>
                     </form>
                 </li>
-                {% endfor %}
-            </ul>
 
-            {% endif %}
-        </li>
-        <li class='list-group-item panel-footer'>Mentor - {{user.mentor}}</li>
+                <li class='list-group-item panel-content'>
+                    <form method='post' action='/users/{{user.id}}/awards'>
+                        <button class='btn btn-success'>Add Award</button>
+                    </form>
+                    {% if user.awards.length > 0 %} Awards -
+                    <ul class='list-group'>
+                        {% for award in user.awards %}
+                        <li class='list-group-item'> {{award}}
+                            <form method='post' action='users/{{user.id}}/awards/{{loop.index0}}?_method=DELETE'>
+                                <button class='btn btn-warning'>Delete Award</button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    {% endif %}
+                </li>
+                <li class='list-group-item panel-footer'>Mentor - {{user.mentor}}</li>
+            </ul>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
 </div>
 {% endblock %}

@@ -41,7 +41,7 @@ router.delete('/:id', (req, res, next) => {
 //CREATE AWARD
 router.post('/:id/awards', (req, res, next) => {
     User.generateAward(req.params.id)
-        .then(redirect(res))
+        .then((redirect(res)))
         .catch(next);
 });
 

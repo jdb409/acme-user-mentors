@@ -39,6 +39,11 @@ const seed = () => {
 //Class Methods
 User.findUsersViewModel = () => {
     return User.findAll()
+        .then(users => {
+            return users.sort(function (a, b) {
+                return a.id - b.id;
+            });
+        });
 }
 
 User.destroyById = (id) => {
@@ -57,11 +62,9 @@ User.generateAward = (id) => {
             id: id
         }
     }).then(user => {
-        return user.update({
-            awards: Sequelize.fn('array_append', Sequelize.col('awards'), faker.company.catchPhrase())
-        }).then(user => {
-            return user;
-        });
+        user.awards.push(faker.company.catchPhrase());
+        user.changed('awards', true);
+        return user.save();
     });
 }
 
@@ -74,13 +77,13 @@ User.removeAward = (userId, awardId) => {
         user.awards.splice(awardId, 1);
         user.changed('awards', true);
         return user.save();
-    }); 
+    });
 }
 
-    module.exports = {
-        sync,
-        seed,
-        models: {
-            User
-        }
+module.exports = {
+    sync,
+    seed,
+    models: {
+        User
     }
+}
