@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "DATABASE_URL=postgres://localhost/acme_user_mentors_db nodemon app.js"
+    "start": "DATABASE_URL=postgres://localhost/acme_user_mentors_db node app.js"
   },
   "keywords": [],
   "author": "",

@@ -22,6 +22,10 @@ app.get('/', (req, res, next) => {
 
 app.use('/users', require('./routes/users'));
 
+app.get((err, req, res, next) => {
+    res.render('error', { error: err });
+});
+
 db.sync()
     .then(() => {
         console.log('Synced!');

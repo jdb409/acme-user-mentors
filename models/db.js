@@ -26,13 +26,6 @@ const findUser = (id) => {
     })
 }
 
-
-//Associations
-Award.belongsTo(User);
-User.hasMany(Award);
-User.belongsTo(User, { as: 'Mentor' });
-User.hasMany(User, { as: 'Mentees', foreignKey: 'MentorId' });
-
 const createUser = (name, mentor) => {
     return User.create({
         name: name
@@ -50,6 +43,14 @@ const seed = () => {
             return Promise.all([User.generateAward(users[0].id), User.generateAward(users[0].id), User.generateAward(users[1].id), User.generateAward(users[1].id)])
         })
 }
+
+
+//Associations
+Award.belongsTo(User);
+User.hasMany(Award);
+User.belongsTo(User, { as: 'Mentor' });
+User.hasMany(User, { as: 'Mentees', foreignKey: 'MentorId' });
+
 
 //Class Methods
 User.findUsersViewModel = () => {
@@ -71,14 +72,13 @@ User.destroyById = (id) => {
 }
 
 User.generateAward = (id) => {
-
     return Award.create({
         award: faker.company.catchPhrase()
     }).then(award => {
         return findUser(id)
-        .then(user => {
-            award.setUser(user);
-        });
+            .then(user => {
+                award.setUser(user);
+            });
     });
 }
 
@@ -88,36 +88,39 @@ User.removeAward = (userId, awardId) => {
             userId: userId,
             id: awardId
         }
-    }).then(award => {
-        return award.destroy();
-    }).then(() => {
-        return Award.findAll({
-            where: {
-                userId: userId
-            }
-        })
-    }).then(awards => {
-        console.log(awards.length);
-        if (awards.length < 2) {
-            return User.findAll({
-                where: {
-                    MentorId: userId
-                }
-            }).then(users => {
+        //remove award
+        }).then(award => {
+            return award.destroy();
 
-                users.forEach((user) => {
-                    user.MentorId = null;
-                    user.save();
-                })
+        }).then(() => {
+            return Award.findAll({
+                where: {
+                    userId: userId
+                }
             })
+            }).then(awards => {
+            //check to see if need to swtich mentor
+            if (awards.length < 2) {
+                return User.findAll({
+                    where: {
+                        MentorId: userId
+                    }
+                }).then(users => {
+                    users.forEach((user) => {
+                        user.MentorId = null;
+                        user.save(); //update db
+                    })
+                })
         }
 
     })
 }
 
 User.updateUserFromRequestBody = (userId, mentorId) => {
+
     return findUser(userId)
         .then(user => {
+            //check to see if user has mentor
             if (user.MentorId === null) {
                 return findUser(mentorId.mentor)
                     .then(mentor => {
@@ -127,6 +130,7 @@ User.updateUserFromRequestBody = (userId, mentorId) => {
                         return user.save();
                     })
             }
+
             else {
                 user.MentorId = null;
                 return user.save();

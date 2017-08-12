@@ -3,10 +3,10 @@
 <div class='container well'>
     <form method='post' action='/users'>
         <div class='form-group-item'>
-            <input type='text' name='name' class='form control' placeholder='User'>
+            <input type='text' name='name' class='form-control' placeholder='User'>
         </div>
         <div class='form-group-item'>
-            <input type='submit' class='form control btn btn-primary' value='Add User'>
+            <input type='submit' class='btn btn-primary' value='Add User'>
         </div>
     </form>
 </div>
@@ -21,6 +21,7 @@
                         <button class='btn btn-danger'>Delete</button>
                     </form>
                 </li>
+                
                 <!-- awards -->
                 <li class='list-group-item panel-content'>
                     <form method='post' action='/users/{{user.id}}/awards'>
