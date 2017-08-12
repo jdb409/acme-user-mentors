@@ -31,12 +31,12 @@ router.delete('/:id', (req, res, next) => {
         .catch(next);
 });
 
-// //UPDATE
-// router.put('/:id', (req, res, next) => {
-//     User.updateUserFromRequestBody(req.params.id, req.body)
-//         .then(redirect(res))
-//         .catch(next);
-// });
+//UPDATE
+router.put('/:id', (req, res, next) => {
+    User.updateUserFromRequestBody(req.params.id, req.body)
+        .then(redirect(res))
+        .catch(next);
+});
 
 //CREATE AWARD
 router.post('/:id/awards', (req, res, next) => {

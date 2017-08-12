@@ -14,14 +14,14 @@
     <div class='panel'>
 
         {% for user in users %}
-        <div class='col-sm-4'>
+        <div class='col-sm-6'>
             <ul class='list-group'>
                 <li class='list-group-item panel-heading'>{{user.name}}
                     <form method='post' action='/users/{{user.id}}?_method=DELETE'>
                         <button class='btn btn-danger'>Delete</button>
                     </form>
                 </li>
-
+                <!-- awards -->
                 <li class='list-group-item panel-content'>
                     <form method='post' action='/users/{{user.id}}/awards'>
                         <button class='btn btn-success'>Add Award</button>
@@ -29,17 +29,39 @@
                     {% if user.awards.length > 0 %} Awards -
                     <ul class='list-group'>
                         {% for award in user.awards %}
-                        <li class='list-group-item'> {{award}}
-                            <form method='post' action='users/{{user.id}}/awards/{{loop.index0}}?_method=DELETE'>
+                        <li class='list-group-item'> {{award.award}}
+                            <form method='post' action='users/{{user.id}}/awards/{{award.id}}?_method=DELETE'>
                                 <button class='btn btn-warning'>Delete Award</button>
                             </form>
                         </li>
                         {% endfor %}
                     </ul>
+                    {% endif %}
+                </li>
+
+                <!-- mentors -->
+                <li class='list-group-item'>
+
+                    {% if user.Mentor %}
+                    <li class='list-group-item panel-footer'><span class='label label-primary'>Mentored by: {{user.Mentor.name}} </span>
+                        <br>
+                        <form method='post' action='/users/{{user.id}}?_method=PUT'>
+                            <button class='btn btn-danger'>Delete Mentor</button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <form method='post' action='/users/{{user.id}}?_method=PUT'>
+                        <select name='mentor' class='panel-footer form-control'>
+                            {% for mentor in users %} {% if mentor.awards.length > 1 and mentor != user %}
+                                <option value = '{{mentor.id}}'>{{mentor.name}}</option>
+                            {% endif %} {% endfor %}
+                        </select>
+                        <button class='btn btn-info'>Set as mentor</button>
+                    </form>
+
 
                     {% endif %}
                 </li>
-                <li class='list-group-item panel-footer'>Mentor - {{user.mentor}}</li>
             </ul>
         </div>
         {% endfor %}
