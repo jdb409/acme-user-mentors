@@ -18,6 +18,15 @@ const Award = db.define('award', {
     }
 });
 
+const findUser = (id) => {
+    return User.findOne({
+        where: {
+            id: id
+        }
+    })
+}
+
+
 //Associations
 Award.belongsTo(User);
 User.hasMany(Award);
@@ -45,7 +54,7 @@ const seed = () => {
 //Class Methods
 User.findUsersViewModel = () => {
     return User.findAll({
-        include: [{ model: Award }, { model: User, as: 'Mentor' }, {model: User, as: 'Mentees'}]
+        include: [{ model: Award }, { model: User, as: 'Mentor' }, { model: User, as: 'Mentees' }]
     })
         .then(users => {
             return users.sort(function (a, b) {
@@ -55,13 +64,10 @@ User.findUsersViewModel = () => {
 }
 
 User.destroyById = (id) => {
-    return User.findOne({
-        where: {
-            id: id
-        }
-    }).then(user => {
-        return user.destroy();
-    });
+    return findUser(id)
+        .then(user => {
+            return user.destroy();
+        });
 }
 
 User.generateAward = (id) => {
@@ -69,11 +75,8 @@ User.generateAward = (id) => {
     return Award.create({
         award: faker.company.catchPhrase()
     }).then(award => {
-        return User.findOne({
-            where: {
-                id: id
-            }
-        }).then(user => {
+        return findUser(id)
+        .then(user => {
             award.setUser(user);
         });
     });
@@ -101,8 +104,8 @@ User.removeAward = (userId, awardId) => {
                     MentorId: userId
                 }
             }).then(users => {
-                
-                users.forEach( (user) => {
+
+                users.forEach((user) => {
                     user.MentorId = null;
                     user.save();
                 })
@@ -113,28 +116,22 @@ User.removeAward = (userId, awardId) => {
 }
 
 User.updateUserFromRequestBody = (userId, mentorId) => {
-    return User.findOne({
-        where: {
-            id: userId
-        }
-    }).then(user => {
-        if (user.MentorId === null) {
-            return User.findOne({
-                where: {
-                    id: mentorId.mentor
-                }
-            }).then(mentor => {
+    return findUser(userId)
+        .then(user => {
+            if (user.MentorId === null) {
+                return findUser(mentorId.mentor)
+                    .then(mentor => {
 
-                user.MentorId = mentor.id;
+                        user.MentorId = mentor.id;
 
+                        return user.save();
+                    })
+            }
+            else {
+                user.MentorId = null;
                 return user.save();
-            })
-        }
-        else {
-            user.MentorId = null;
-            return user.save();
-        }
-    })
+            }
+        })
 }
 
 module.exports = {
