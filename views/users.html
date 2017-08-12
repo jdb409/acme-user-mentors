@@ -14,7 +14,7 @@
     <div class='panel'>
 
         {% for user in users %}
-        <div class='col-sm-6'>
+        <div class='col-sm-4'>
             <ul class='list-group'>
                 <li class='list-group-item panel-heading'>{{user.name}}
                     <form method='post' action='/users/{{user.id}}?_method=DELETE'>
@@ -43,10 +43,10 @@
                 <li class='list-group-item'>
 
                     {% if user.Mentor %}
-                    <li class='list-group-item panel-footer'><span class='label label-primary'>Mentored by: {{user.Mentor.name}} </span>
-                        <br>
+                    <li class='list-group-item panel-footer h3'><span class='label label-primary'>Mentored by: {{user.Mentor.name}} </span>
+                        <h1></h1>
                         <form method='post' action='/users/{{user.id}}?_method=PUT'>
-                            <button class='btn btn-danger'>Delete Mentor</button>
+                            <button class='btn btn-danger'>Remove Mentor</button>
                         </form>
                     </li>
                     {% else %}
