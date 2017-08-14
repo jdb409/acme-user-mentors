@@ -8,7 +8,7 @@ const db = new Sequelize(process.env.DATABASE_URL, {
 const User = db.define('user', {
     name: {
         type: Sequelize.STRING,
-        allowNull: false
+        unique: true
     }
 });
 
@@ -26,7 +26,7 @@ const findUser = (id) => {
     })
 }
 
-const createUser = (name, mentor) => {
+const createUser = (name) => {
     return User.create({
         name: name
     });
@@ -142,6 +142,7 @@ module.exports = {
     sync,
     seed,
     models: {
-        User
+        User,
+        Award
     }
 }

@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "DATABASE_URL=postgres://localhost/acme_user_mentors_db ./node_modules/mocha/bin/mocha --recursive --watch",
     "start": "node app.js",
     "start:dev": "DATABASE_URL=postgres://localhost/acme_user_mentors_db nodemon app.js"
   },
